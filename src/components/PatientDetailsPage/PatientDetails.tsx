@@ -6,6 +6,7 @@ import { Typography } from "@mui/material";
 import type { Patient, Diagnosis } from "../../types";
 import patients from "../../services/patients";
 import diagnoses from "../../services/diagnoses";
+import EntryDetails from "./EntryDetails";
 
 const Patient = ({
   patient,
@@ -14,23 +15,6 @@ const Patient = ({
   patient: null | Patient;
   diagnose: null | Diagnosis[];
 }) => {
-  patient &&
-    patient.entries.forEach((entry) => {
-      switch (entry.type) {
-        case "HealthCheck": {
-          return <div></div>;
-        }
-        case "Hospital": {
-          return <div>b</div>;
-        }
-        case "OccupationalHealthcare": {
-          return <div>c</div>;
-        }
-        default:
-          return null;
-      }
-    });
-
   return (
     <div>
       {patient && (
@@ -48,21 +32,7 @@ const Patient = ({
 
           <Typography fontSize="1.5rem">entries</Typography>
           {patient.entries.map((entry) => (
-            <div key={entry.id}>
-              <Typography fontSize="1rem">
-                {entry.date} {entry.description}
-              </Typography>
-              <ul>
-                {entry?.diagnosisCodes?.map((code) => (
-                  <li key={code}>
-                    <Typography fontSize=".8rem">
-                      {code}{" "}
-                      {diagnose?.find((item) => item.code === code)?.name}
-                    </Typography>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <EntryDetails key={entry.id} entry={entry} />
           ))}
         </div>
       )}
