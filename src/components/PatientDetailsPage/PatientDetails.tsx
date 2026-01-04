@@ -3,17 +3,17 @@ import { useParams } from "react-router-dom";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import { Typography } from "@mui/material";
-import type { Patient, Diagnosis } from "../../types";
+import type { Patient } from "../../types";
 import patients from "../../services/patients";
-import diagnoses from "../../services/diagnoses";
 import EntryDetails from "./EntryDetails";
+import NewEntryForm from "./NewEntryForm";
 
 const Patient = ({
   patient,
-  diagnose,
+  userId,
 }: {
   patient: null | Patient;
-  diagnose: null | Diagnosis[];
+  userId: string;
 }) => {
   return (
     <div>
@@ -30,6 +30,10 @@ const Patient = ({
             occupation: {patient.occupation}
           </Typography>
 
+          <div>
+            <NewEntryForm userId={userId} />
+          </div>
+
           <Typography fontSize="1.5rem">entries</Typography>
           {patient.entries.map((entry) => (
             <EntryDetails key={entry.id} entry={entry} />
@@ -43,7 +47,6 @@ const Patient = ({
 const PatientDetails = () => {
   const { id } = useParams();
   const [patient, setPatient] = useState<Patient | null>(null);
-  const [diagnose, setDiagnose] = useState<Diagnosis[] | null>([]);
 
   useEffect(() => {
     async function fetchPatient() {
@@ -55,18 +58,8 @@ const PatientDetails = () => {
     fetchPatient();
   }, [id]);
 
-  useEffect(() => {
-    async function fetchDiagnoses() {
-      if (id) {
-        const diagnosesData = await diagnoses.getDiagnoses();
-        setDiagnose(diagnosesData);
-      }
-    }
-    fetchDiagnoses();
-  }, [id]);
-
   return (
-    <h1>{patient && <Patient patient={patient} diagnose={diagnose} />}</h1>
+    <div>{id && patient && <Patient patient={patient} userId={id} />}</div>
   );
 };
 export default PatientDetails;
